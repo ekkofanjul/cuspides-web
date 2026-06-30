@@ -1,0 +1,210 @@
+/* ============================================
+   TOKENS — sacados del Figma, no inventar nuevos
+   ============================================ */
+:root {
+  --color-bg-light: #f6f2f2;
+  --color-bg-dark: #1e1e1e;
+  --color-surface-dark: #2e2e2e;
+  --color-accent: #6874f8;
+  --color-text-on-dark: #d9d9d9;
+  --color-gray-neutral: #8f8f8f;
+
+  --font-display: "Anton", sans-serif;
+  --font-body: "Raleway", sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+
+.hero {
+  position: relative;
+  min-height: 100svh; /* svh = alto real de pantalla en mobile, evita saltos por la barra del navegador */
+  overflow: hidden;
+  border-radius: 0 0 2.5rem 2.5rem; /* el "corte" redondeado abajo que tiene el Figma */
+  background-color: var(--color-bg-dark);
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+/* --- Fondo (foto + ruta + degradé) --- */
+.hero__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* en el Figma la foto arranca a mitad del hero; la bajamos un poco para
+     dejar aire arriba para el nav y el headline */
+  object-position: center 30%;
+}
+
+.hero__route-line {
+  position: absolute;
+  left: 36.8%;
+  top: 38.9%;
+  width: 41.5%;
+  height: 48.8%;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.hero__dot {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(246, 242, 242, 0.25);
+}
+
+.hero__gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 30%,
+    rgba(0, 0, 0, 0.55) 65%,
+    var(--color-bg-dark) 95%
+  );
+}
+
+/* --- Nav --- */
+.hero__nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.5rem 1.5rem 0;
+}
+
+.hero__logo {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hero__menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  filter: invert(1); /* el ícono viene en negro, lo pasamos a blanco */
+}
+
+/* --- Headline central --- */
+.hero__content {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.hero__headline {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-size: clamp(2.5rem, 11vw, 5.5rem);
+  line-height: 0.95;
+}
+
+.hero__line {
+  display: block;
+  overflow: hidden; /* necesario para el reveal palabra por palabra */
+}
+
+.hero__line .word {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+/* --- Bloque inferior --- */
+.hero__footer {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  padding: 0 1.5rem 3rem;
+}
+
+.hero__claim {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: clamp(1.5rem, 6vw, 2.3rem);
+  letter-spacing: 0.01em;
+}
+
+.hero__subclaim {
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--color-text-on-dark);
+}
+
+.hero__cta {
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid black;
+  background: rgba(255, 255, 255, 0.53);
+  backdrop-filter: blur(1.5px);
+  color: black;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.hero__cta-arrow {
+  width: 0.9rem;
+  height: 0.9rem;
+  transform: rotate(20deg);
+}
+
+/* ============================================
+   ANIMACIONES — clase base para Motion (scroll-reveal)
+   ============================================ */
+.reveal {
+  opacity: 0;
+}
+
+/* Si el usuario prefiere menos movimiento, mostramos todo fijo sin animar */
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero__line .word {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
