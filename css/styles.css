@@ -38,11 +38,16 @@ body {
   color: white;
 }
 
-/* --- Fondo (foto + ruta + degradé) --- */
+/* --- Fondo (foto + ruta + degradé) ---
+   Orden real del Figma (de atrás para adelante): texto → foto de montaña → degradé.
+   Por eso .hero__media va z-index 2 (arriba del texto), y .hero__content queda en 1.
+   Para que el texto no desaparezca del todo detrás de la foto, la foto lleva una
+   máscara: arriba es transparente (se ve el texto) y abajo se vuelve opaca
+   (tapa el texto, como el pico de la montaña "comiéndose" las letras). */
 .hero__media {
   position: absolute;
   inset: 0;
-  z-index: 0;
+  z-index: 2;
 }
 
 .hero__photo {
@@ -54,6 +59,9 @@ body {
   /* en el Figma la foto arranca a mitad del hero; la bajamos un poco para
      dejar aire arriba para el nav y el headline */
   object-position: center 30%;
+  /* fade: transparente arriba (deja ver el texto detrás) → opaca abajo (tapa el texto) */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 42%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 42%);
 }
 
 .hero__route-line {
@@ -112,10 +120,12 @@ body {
   filter: invert(1); /* el ícono viene en negro, lo pasamos a blanco */
 }
 
-/* --- Headline central --- */
+/* --- Headline central ---
+   z-index 1: queda DETRÁS de .hero__media (z-index 2), así el pico de la
+   montaña tapa parte de las letras, como en el Figma. */
 .hero__content {
   position: relative;
-  z-index: 10;
+  z-index: 1;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -191,6 +201,141 @@ body {
   width: 0.9rem;
   height: 0.9rem;
   transform: rotate(20deg);
+}
+
+/* ============================================
+   ESTO NO ES UN PASEO
+   El fondo pasa de claro a oscuro DENTRO de la misma sección (degradé,
+   no un corte). Por eso el texto también cambia de color a mitad de camino.
+   ============================================ */
+.paseo {
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    var(--color-bg-light) 0%,
+    var(--color-bg-light) 36%,
+    var(--color-bg-dark) 48%,
+    var(--color-bg-dark) 100%
+  );
+  padding: 4rem 1.5rem 0;
+}
+
+/* --- Intro: headline + subrayado --- */
+.paseo__intro {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.paseo__headline {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(2rem, 9vw, 3rem);
+  line-height: 1.1;
+}
+
+.paseo__headline .accent {
+  color: var(--color-accent);
+}
+
+.paseo__headline .dark {
+  color: var(--color-bg-dark);
+}
+
+.paseo__underline {
+  display: block;
+  width: min(90%, 420px);
+  margin: 0.5rem auto 0;
+}
+
+/* --- Cuerpo: título + texto + stat + checklist --- */
+.paseo__body {
+  max-width: 480px;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+}
+
+.paseo__title {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: var(--color-bg-dark);
+  font-size: clamp(1.8rem, 8vw, 2.6rem);
+  line-height: 1.2;
+  margin-bottom: 1.25rem;
+}
+
+.paseo__text {
+  font-family: var(--font-body);
+  font-weight: 500;
+  color: var(--color-text-on-dark);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 3rem;
+}
+
+.paseo__stat {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.paseo__stat-number {
+  display: block;
+  font-family: var(--font-display);
+  color: var(--color-bg-light);
+  font-size: clamp(6rem, 28vw, 9rem);
+  line-height: 0.85;
+}
+
+.paseo__stat-label {
+  display: block;
+  font-family: var(--font-display);
+  color: var(--color-accent);
+  font-size: clamp(2rem, 9vw, 3rem);
+  letter-spacing: 0.02em;
+}
+
+.paseo__stat-caption {
+  font-family: var(--font-body);
+  color: var(--color-text-on-dark);
+  font-size: 1rem;
+  margin-top: 0.75rem;
+}
+
+.paseo__checklist {
+  list-style: none;
+}
+
+.paseo__checklist li {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
+}
+
+.paseo__checklist li:first-child {
+  border-top: 1px solid rgba(217, 217, 217, 0.25);
+}
+
+.paseo__checklist img {
+  width: 1rem;
+  flex-shrink: 0;
+}
+
+.paseo__checklist span {
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--color-text-on-dark);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+/* --- Foto de cierre --- */
+.paseo__photo {
+  display: block;
+  width: 100%;
+  height: 65vh;
+  max-height: 540px;
+  object-fit: cover;
 }
 
 /* ============================================
