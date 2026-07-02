@@ -220,47 +220,112 @@ body {
   padding: 4rem 1.5rem 0;
 }
 
-/* --- Intro: headline + subrayado --- */
+/* --- Intro: 2 filas divididas por líneas, cada una con su caja de X --- */
 .paseo__intro {
-  text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
+}
+
+.paseo__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.25rem 0;
+}
+
+.paseo__row--top {
+  border-top: 1px solid var(--color-bg-dark);
+}
+
+.paseo__row--bottom {
+  border-top: 1px solid var(--color-bg-dark);
+  border-bottom: 1px solid var(--color-bg-dark);
 }
 
 .paseo__headline {
   font-family: var(--font-display);
   text-transform: uppercase;
-  font-size: clamp(2rem, 9vw, 3rem);
+  font-size: clamp(1.7rem, 8vw, 2.6rem);
   line-height: 1.1;
 }
 
-.paseo__headline .accent {
+.paseo__headline .accent,
+.paseo__subheadline .accent {
   color: var(--color-accent);
 }
 
-.paseo__headline .dark {
+.paseo__headline .dark,
+.paseo__subheadline .dark {
   color: var(--color-bg-dark);
 }
 
-.paseo__underline {
-  display: block;
-  width: min(90%, 420px);
-  margin: 0.5rem auto 0;
+.paseo__subheadline {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(1.5rem, 7vw, 2.2rem);
+  line-height: 1.1;
+  text-align: right;
 }
 
-/* --- Cuerpo: título + texto + stat + checklist --- */
+/* Cajas oscuras con la(s) X — hechas en CSS puro, sin depender de una imagen */
+.paseo__mark {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  background: var(--color-bg-dark);
+  border-radius: 0.5rem;
+}
+
+.paseo__mark--single {
+  width: clamp(4.5rem, 20vw, 6.5rem);
+  aspect-ratio: 172 / 133;
+}
+
+.paseo__mark--triple {
+  width: clamp(4.5rem, 20vw, 6.5rem);
+  aspect-ratio: 172 / 95;
+}
+
+.paseo__x {
+  color: var(--color-bg-light);
+  font-weight: 700;
+  line-height: 1;
+}
+
+.paseo__mark--single .paseo__x {
+  font-size: clamp(2.5rem, 10vw, 3.5rem);
+}
+
+.paseo__mark--triple .paseo__x {
+  font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+}
+
+/* Ilustración de los excursionistas tachados */
+.paseo__hikers {
+  display: block;
+  width: min(70%, 320px);
+  margin: 2rem 0 0 auto;
+}
+
+/* --- Cuerpo: título + texto + checklist (acordeón) + stat --- */
 .paseo__body {
-  max-width: 480px;
+  max-width: 1100px;
   margin: 0 auto;
   padding-bottom: 3rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
 }
 
 .paseo__title {
   font-family: var(--font-display);
   text-transform: uppercase;
-  color: var(--color-bg-dark);
-  font-size: clamp(1.8rem, 8vw, 2.6rem);
+  color: var(--color-bg-light);
+  font-size: clamp(1.8rem, 6vw, 2.8rem);
   line-height: 1.2;
-  margin-bottom: 1.25rem;
+  grid-column: 1 / -1;
 }
 
 .paseo__text {
@@ -269,19 +334,99 @@ body {
   color: var(--color-text-on-dark);
   font-size: 0.95rem;
   line-height: 1.5;
-  margin-bottom: 3rem;
+}
+
+/* Acordeón */
+.paseo__checklist {
+  list-style: none;
+  border-top: 1px solid rgba(217, 217, 217, 0.25);
+}
+
+.paseo__item {
+  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
+}
+
+.paseo__item-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 1.1rem 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  color: var(--color-text-on-dark);
+}
+
+.paseo__item-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex-shrink: 0;
+  background-color: currentColor;
+  -webkit-mask-image: url("https://www.figma.com/api/mcp/asset/345495f1-1523-442d-a807-9c93f6534aac");
+  mask-image: url("https://www.figma.com/api/mcp/asset/345495f1-1523-442d-a807-9c93f6534aac");
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.paseo__item-label {
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease-out;
+}
+
+/* Estado activo: ícono y texto pasan a color acento */
+.paseo__item.is-active .paseo__item-toggle {
+  color: var(--color-accent);
+}
+
+.paseo__item.is-active .paseo__item-icon {
+  transform: rotate(90deg);
+}
+
+/* Truco sin JS para animar el alto: 0fr → 1fr en grid-template-rows */
+.paseo__item-content {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.paseo__item.is-active .paseo__item-content {
+  grid-template-rows: 1fr;
+}
+
+.paseo__item-inner {
+  overflow: hidden;
+}
+
+.paseo__item-inner p {
+  font-family: var(--font-body);
+  font-weight: 400;
+  color: var(--color-text-on-dark);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  padding-bottom: 1.1rem;
 }
 
 .paseo__stat {
   text-align: center;
-  margin-bottom: 3rem;
+  align-self: center;
+  justify-self: center;
 }
 
 .paseo__stat-number {
   display: block;
   font-family: var(--font-display);
   color: var(--color-bg-light);
-  font-size: clamp(6rem, 28vw, 9rem);
+  font-size: clamp(6rem, 28vw, 8rem);
   line-height: 0.85;
 }
 
@@ -289,7 +434,7 @@ body {
   display: block;
   font-family: var(--font-display);
   color: var(--color-accent);
-  font-size: clamp(2rem, 9vw, 3rem);
+  font-size: clamp(2rem, 9vw, 2.6rem);
   letter-spacing: 0.02em;
 }
 
@@ -300,33 +445,33 @@ body {
   margin-top: 0.75rem;
 }
 
-.paseo__checklist {
-  list-style: none;
-}
+/* Desktop: título arriba entero, checklist a la izquierda, "12 MESES"
+   centrado verticalmente a la derecha */
+@media (min-width: 900px) {
+  .paseo__body {
+    grid-template-columns: 1.6fr 1fr;
+    grid-template-areas:
+      "title  title"
+      "text   stat"
+      "check  stat";
+    align-items: start;
+  }
 
-.paseo__checklist li {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 1.1rem 0;
-  border-bottom: 1px solid rgba(217, 217, 217, 0.25);
-}
+  .paseo__title {
+    grid-area: title;
+  }
 
-.paseo__checklist li:first-child {
-  border-top: 1px solid rgba(217, 217, 217, 0.25);
-}
+  .paseo__text {
+    grid-area: text;
+  }
 
-.paseo__checklist img {
-  width: 1rem;
-  flex-shrink: 0;
-}
+  .paseo__checklist {
+    grid-area: check;
+  }
 
-.paseo__checklist span {
-  font-family: var(--font-body);
-  font-weight: 400;
-  color: var(--color-text-on-dark);
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
+  .paseo__stat {
+    grid-area: stat;
+  }
 }
 
 /* --- Foto de cierre --- */
@@ -335,6 +480,290 @@ body {
   width: 100%;
   height: 65vh;
   max-height: 540px;
+  object-fit: cover;
+}
+
+/* ============================================
+   DIVIDER: marquee en loop infinito
+   ============================================ */
+
+/* Oculta visualmente pero deja el texto disponible para lectores de pantalla */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.marquee {
+  background: var(--color-bg-dark);
+  overflow: hidden;
+  padding: 0.5rem 0;
+}
+
+.marquee__row {
+  overflow: hidden;
+}
+
+/* El truco del loop sin cortes: cada fila tiene el texto repetido 2 veces
+   IDÉNTICAS (.marquee__group x2). Al mover el track exactamente 50% de su
+   ancho total, se movió el ancho de UN grupo completo — coincide perfecto
+   con el inicio del segundo grupo, así no se nota el corte. */
+.marquee__track {
+  display: flex;
+  width: max-content;
+}
+
+.marquee__row--left .marquee__track {
+  animation: marquee-left 28s linear infinite;
+}
+
+.marquee__row--right .marquee__track {
+  animation: marquee-right 28s linear infinite;
+}
+
+.marquee__group {
+  display: flex;
+  flex-shrink: 0;
+}
+
+.marquee__track span {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  color: var(--color-accent);
+  font-size: clamp(2rem, 7vw, 4rem);
+  line-height: 1.15;
+  white-space: nowrap;
+  padding-right: 1.5rem;
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Loop continuo: no es un reveal de "una sola vez", así que no respeta el
+   patrón .reveal — pero sí respetamos que la persona prefiera menos
+   movimiento, deteniendo el desplazamiento sin ocultar el texto. */
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
+  }
+}
+
+/* ============================================
+   PROCESO: 5 pasos (mobile)
+   ============================================ */
+.steps {
+  position: relative;
+  background: var(--color-bg-light);
+  padding: 4rem 1.5rem;
+}
+
+.steps__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2.5rem;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.steps__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.steps__image {
+  width: clamp(9rem, 45vw, 12rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-surface-dark);
+  overflow: hidden;
+}
+
+.steps__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Las fotos de cierre (quebrada al principio, soga al final) van
+   levemente giradas, como en el Figma — un detalle artístico, no un error */
+.steps__image--tilted {
+  transform: rotate(-8deg);
+}
+
+.steps__number {
+  display: block;
+  font-family: var(--font-display);
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--color-bg-dark);
+  font-size: clamp(3rem, 14vw, 4.5rem);
+  line-height: 1;
+}
+
+.steps__title {
+  font-family: var(--font-body);
+  font-weight: 800;
+  color: var(--color-bg-dark);
+  font-size: clamp(1.3rem, 6vw, 1.7rem);
+  margin-top: -0.5rem;
+}
+
+.steps__text {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-bg-dark);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 22rem;
+}
+
+/* ============================================
+   PROCESO — versión DESKTOP (real, extraída del Figma)
+   ============================================ */
+
+/* Por defecto (mobile) el bloque desktop está oculto */
+.steps-desktop {
+  display: none;
+}
+
+@media (min-width: 1000px) {
+  /* ...y se oculta la lista mobile */
+  .steps__list {
+    display: none;
+  }
+
+  .steps {
+    padding: 4rem 0;
+  }
+
+  .steps-desktop {
+    display: block;
+  }
+}
+
+.steps-desktop__header {
+  max-width: 1400px;
+  margin: 0 auto 1rem;
+  padding: 0 3rem;
+}
+
+.steps-desktop__heading {
+  font-family: var(--font-body);
+  font-weight: 900;
+  color: var(--color-bg-dark);
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+/* El "scaler" reserva el alto correcto y adentro metemos el rotor a su
+   tamaño natural (los mismos px que tiene en Figma). main.js calcula
+   cuánto hay que achicarlo (transform: scale) para que entre en la
+   pantalla del usuario, sin romper las proporciones. */
+.steps-desktop__scaler {
+  position: relative;
+  width: 100%;
+  max-width: 1922.38px;
+  aspect-ratio: 1922.38 / 888.04;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.steps-desktop__rotor {
+  --scale: 1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1921.46px;
+  height: 886.05px;
+  transform: translate(-50%, -50%) rotate(-90.06deg) scale(var(--scale));
+  transform-origin: center center;
+}
+
+/* Cada elemento posicionado "a la Figma": left/top/width/height exactos */
+.fx {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Los números y textos venían centrados en su punto (translate -50%,-50%) */
+.fx--center {
+  transform: translate(-50%, -50%);
+}
+
+/* Contra-rotación: como el bloque entero está girado -90.06°, cada texto
+   se gira +90.06° para volver a quedar derecho (igual que en el Figma) */
+.fx--rot > * {
+  transform: rotate(90.06deg);
+  white-space: nowrap;
+}
+
+.steps-desktop__number {
+  font-family: var(--font-display);
+  color: transparent;
+  -webkit-text-stroke: 2px var(--color-bg-dark);
+  font-size: 136px;
+  line-height: 1;
+}
+
+.steps-desktop__title {
+  font-family: var(--font-body);
+  font-weight: 800;
+  color: var(--color-bg-dark);
+  font-size: 40px;
+  line-height: 1.1;
+  white-space: normal;
+  width: max-content;
+  max-width: 260px;
+}
+
+.steps-desktop__text {
+  font-family: var(--font-body);
+  font-weight: 300;
+  color: var(--color-bg-dark);
+  font-size: 22px;
+  line-height: 1.3;
+  white-space: normal;
+  width: max-content;
+  max-width: 300px;
+}
+
+.steps-desktop__photo {
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--color-surface-dark);
+}
+
+.steps-desktop__photo img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 

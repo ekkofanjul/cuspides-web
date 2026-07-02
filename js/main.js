@@ -58,3 +58,49 @@ if (!prefersReducedMotion) {
     el.style.opacity = "1";
   });
 }
+
+/* ---------------------------------------------
+   4) Acordeón del checklist ("ESTO NO ES UN PASEO"):
+      al clickear un título, se abre y se pinta de color
+      acento; si había otro abierto, se cierra solo.
+   --------------------------------------------- */
+document.querySelectorAll(".paseo__item-toggle").forEach((button) => {
+  button.addEventListener("click", () => {
+    const item = button.closest(".paseo__item");
+    const wasActive = item.classList.contains("is-active");
+
+    // cierra cualquier otro ítem abierto
+    document.querySelectorAll(".paseo__item.is-active").forEach((openItem) => {
+      openItem.classList.remove("is-active");
+      openItem.querySelector(".paseo__item-toggle").setAttribute("aria-expanded", "false");
+    });
+
+    // si el que clickeaste ya estaba abierto, lo dejamos cerrado (toggle);
+    // si estaba cerrado, lo abrimos
+    if (!wasActive) {
+      item.classList.add("is-active");
+      button.setAttribute("aria-expanded", "true");
+    }
+  });
+});
+
+/* ---------------------------------------------
+   5) Escalado del bloque desktop de "EL PROCESO":
+      el bloque tiene un tamaño fijo en píxeles (el mismo que en Figma:
+      1922px de ancho). Acá lo achicamos con transform:scale para que
+      entre en pantallas más chicas, sin romper las proporciones.
+   --------------------------------------------- */
+const stepsScaler = document.getElementById("stepsDesktopScaler");
+const stepsRotor = stepsScaler ? stepsScaler.querySelector(".steps-desktop__rotor") : null;
+const STEPS_NATURAL_WIDTH = 1922.38;
+
+function scaleStepsDesktop() {
+  if (!stepsScaler || !stepsRotor) return;
+  const scale = stepsScaler.getBoundingClientRect().width / STEPS_NATURAL_WIDTH;
+  stepsRotor.style.setProperty("--scale", scale);
+}
+
+if (stepsScaler) {
+  scaleStepsDesktop();
+  window.addEventListener("resize", scaleStepsDesktop);
+}
